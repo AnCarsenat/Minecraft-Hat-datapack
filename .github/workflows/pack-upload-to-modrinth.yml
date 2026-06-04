@@ -1,0 +1,54 @@
+name: Pack and Upload to Modrinth
+
+on:
+  push:
+    branches:
+      - main # Change this to your default branch if it isn't 'main'
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository content
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Archive the specified folder
+      # Adjust the folder path and zip name as needed
+      - name: Compress target folder
+        run: |
+          mkdir -p build
+          zip -r ./build/pack.zip ./hat/*
+        # NOTE: Replace './path/to/your/folder/*' with your actual target directory
+
+      # Step 3: Upload the zip file to Modrinth
+      - name: Upload to Modrinth
+        uses: modrinth/upload-version@v1
+        with:
+          # Your Modrinth project ID or slug
+          project-id: 'any-hat
+          
+          # The version number (you can automate this, or use the GitHub run number for uniqueness)
+          version-number: '1.0.${{ github.run_number }}'
+          
+          # The type of release: release, beta, or alpha
+          version-type: 'release'
+          
+          # Path to the zip file we created in Step 2
+          file-path: './build/my-mod-pack.zip'
+          
+          # Game versions this upload is compatible with (e.g., '1.20.1')
+          game-versions: |
+            26.1.2
+            26.1
+            26
+            1.20.1
+            1.20.2
+            
+          # Mod loaders this upload supports (e.g., 'fabric', 'forge', 'quilt', or 'minecraft' for datapacks/resourcepacks)
+          loaders: |
+            fabric
+            
+          # Your Modrinth API token stored safely in GitHub Secrets
+          token: ${{ secrets.MODRINTH_TOKEN }}
