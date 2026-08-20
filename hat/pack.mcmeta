@@ -22,12 +22,12 @@
         "italic": true
       }
     ],
-    "pack_format": 101.2,
+    "pack_format": 107.1,
     "supported_formats": {
       "min_inclusive": 6,
-      "max_inclusive": 101.2
+      "max_inclusive": 107.1
     },
     "min_format": 6,
-    "max_format": 101.2
+    "max_format": 107.1
   }
 }
