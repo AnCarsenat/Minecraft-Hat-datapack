@@ -22,12 +22,12 @@
         "italic": true
       }
     ],
-    "pack_format": 5,
+    "pack_format": 15,
     "supported_formats": {
-      "min_inclusive": 5,
+      "min_inclusive": 15,
       "max_inclusive": 121
     },
-    "min_format": 5,
+    "min_format": 15,
     "max_format": 121
   },
   "overlays": {
