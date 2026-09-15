@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "net.ancar",
+    "id": "mr_any_hat",
+    "version": "@VERSION@",
+    "metadata": {
+      "name": "Any Hat!",
+      "description": "Wear any item as a hat with /trigger hat. Datapack packaged as a mod.",
+      "contributors": { "Ancar": "Owner" },
+      "contact": {
+        "homepage": "https://modrinth.com/datapack/any-hat",
+        "sources": "https://github.com/AnCarsenat/Minecraft-Hat-datapack",
+        "issues": "https://github.com/AnCarsenat/Minecraft-Hat-datapack/issues"
+      },
+      "icon": "pack.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "depends": [
+      { "id": "quilt_resource_loader", "versions": "*", "unless": "fabric-resource-loader-v0" }
+    ]
+  }
+}

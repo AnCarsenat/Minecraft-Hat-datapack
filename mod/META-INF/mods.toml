@@ -1,0 +1,15 @@
+modLoader = 'javafml'
+loaderVersion = '[25,)'
+license = 'CC-BY-4.0'
+showAsResourcePack = false
+issueTrackerURL = 'https://github.com/AnCarsenat/Minecraft-Hat-datapack/issues'
+
+[[mods]]
+modId = 'mr_any_hat'
+version = '@VERSION@'
+displayName = 'Any Hat!'
+description = 'Wear any item as a hat with /trigger hat. Datapack packaged as a mod.'
+logoFile = 'pack.png'
+authors = 'Ancar'
+displayURL = 'https://modrinth.com/datapack/any-hat'
+updateJSONURL = 'https://api.modrinth.com/updates/cbHZ6Yqk/forge_updates.json'

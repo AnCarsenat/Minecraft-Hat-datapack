@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "mr_any_hat",
+  "version": "@VERSION@",
+  "name": "Any Hat!",
+  "description": "Wear any item as a hat with /trigger hat. Datapack packaged as a mod.",
+  "authors": ["Ancar"],
+  "contact": {
+    "homepage": "https://modrinth.com/datapack/any-hat",
+    "sources": "https://github.com/AnCarsenat/Minecraft-Hat-datapack",
+    "issues": "https://github.com/AnCarsenat/Minecraft-Hat-datapack/issues"
+  },
+  "license": "CC-BY-4.0",
+  "icon": "pack.png",
+  "environment": "*",
+  "depends": {
+    "fabric-resource-loader-v0": "*"
+  }
+}

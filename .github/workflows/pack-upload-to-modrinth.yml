@@ -1,9 +1,10 @@
 name: Pack and Upload to Modrinth
 
+# Release by pushing a version tag: git tag 3.0.5 && git push origin 3.0.5
 on:
   push:
-    branches:
-      - main
+    tags:
+      - '*.*.*'
 
 jobs:
   build-and-upload:
@@ -13,6 +14,7 @@ jobs:
       PROJECT_ID: cbHZ6Yqk # Any Hat! on Modrinth
       MIN_GAME_VERSION: '1.16.1'
       MAX_GAME_VERSION: '26.3' # Keep in sync with max_format in hat/pack.mcmeta
+      VERSION_NUMBER: ${{ github.ref_name }}
 
     steps:
       - name: Checkout repository
@@ -24,6 +26,25 @@ jobs:
           mkdir -p build
           cd hat
           zip -r ../build/hat.zip .
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      # Same datapack plus Fabric/Quilt/Forge/NeoForge metadata, so it loads from the mods folder
+      - name: Build mod jar
+        run: |
+          mkdir -p build/jar build/classes
+          cp -r hat/. build/jar/
+          cp -r mod/fabric.mod.json mod/quilt.mod.json mod/META-INF build/jar/
+          sed -i "s/@VERSION@/$VERSION_NUMBER/g" build/jar/fabric.mod.json build/jar/quilt.mod.json build/jar/META-INF/*.toml
+          javac --release 8 -d build/classes mod/stubs/net/minecraftforge/fml/common/Mod.java mod/src/anyhat/AnyHat.java
+          mkdir -p build/jar/anyhat
+          cp build/classes/anyhat/AnyHat.class build/jar/anyhat/
+          cd build/jar
+          zip -r "../any-hat-$VERSION_NUMBER.jar" .
 
       # Every Modrinth release version from MIN_GAME_VERSION up to MAX_GAME_VERSION (or the newest release if it is not out yet)
       - name: Resolve game versions
@@ -41,28 +62,34 @@ jobs:
       - name: Upload to Modrinth
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          VERSION_NUMBER: 1.0.${{ github.run_number }}
         run: |
-          jq -n \
-            --arg project_id "$PROJECT_ID" \
-            --arg version "$VERSION_NUMBER" \
-            --arg changelog "$(git log -1 --pretty=%B)" \
-            --slurpfile game_versions build/game_versions.json \
-            '{
-              project_id: $project_id,
-              name: $version,
-              version_number: $version,
-              changelog: $changelog,
-              dependencies: [],
-              game_versions: $game_versions[0],
-              version_type: "release",
-              loaders: ["datapack"],
-              featured: true,
-              file_parts: ["file"],
-              primary_file: "file"
-            }' > build/version.json
-          curl -fsS -X POST https://api.modrinth.com/v2/version \
-            -A "AnCarsenat/Minecraft-Hat-datapack (github actions)" \
-            -H "Authorization: $MODRINTH_TOKEN" \
-            -F "data=<build/version.json;type=application/json" \
-            -F "file=@build/hat.zip;type=application/zip"
+          # upload <version_number> <loaders json> <file> <content type>
+          upload() {
+            jq -n \
+              --arg project_id "$PROJECT_ID" \
+              --arg name "$VERSION_NUMBER" \
+              --arg version "$1" \
+              --argjson loaders "$2" \
+              --arg changelog "$(git log -1 --pretty=%B)" \
+              --slurpfile game_versions build/game_versions.json \
+              '{
+                project_id: $project_id,
+                name: $name,
+                version_number: $version,
+                changelog: $changelog,
+                dependencies: [],
+                game_versions: $game_versions[0],
+                version_type: "release",
+                loaders: $loaders,
+                featured: true,
+                file_parts: ["file"],
+                primary_file: "file"
+              }' > build/version.json
+            curl -fsS -X POST https://api.modrinth.com/v2/version \
+              -A "AnCarsenat/Minecraft-Hat-datapack (github actions)" \
+              -H "Authorization: $MODRINTH_TOKEN" \
+              -F "data=<build/version.json;type=application/json" \
+              -F "file=@$3;type=$4"
+          }
+          upload "$VERSION_NUMBER" '["datapack"]' build/hat.zip application/zip
+          upload "$VERSION_NUMBER+mod" '["fabric","forge","neoforge","quilt"]' "build/any-hat-$VERSION_NUMBER.jar" application/java-archive
