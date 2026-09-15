@@ -22,12 +22,43 @@
         "italic": true
       }
     ],
-    "pack_format": 107.1,
+    "pack_format": 5,
     "supported_formats": {
-      "min_inclusive": 6,
-      "max_inclusive": 107.1
+      "min_inclusive": 5,
+      "max_inclusive": 121
     },
-    "min_format": 6,
-    "max_format": 107.1
+    "min_format": 5,
+    "max_format": 121
+  },
+  "overlays": {
+    "entries": [
+      {
+        "directory": "overlay_18",
+        "formats": {
+          "min_inclusive": 18,
+          "max_inclusive": 47
+        },
+        "min_format": 18,
+        "max_format": 47
+      },
+      {
+        "directory": "overlay_41",
+        "formats": {
+          "min_inclusive": 41,
+          "max_inclusive": 47
+        },
+        "min_format": 41,
+        "max_format": 47
+      },
+      {
+        "directory": "overlay_48",
+        "formats": {
+          "min_inclusive": 48,
+          "max_inclusive": 121
+        },
+        "min_format": 48,
+        "max_format": 121
+      }
+    ]
   }
 }

@@ -60,5 +60,6 @@ To wear an item as a hat, use:
 ---
 
 ### 📝 Changelog
+- Supports every version from 1.16.1 to 26.3 in a single datapack
 - Ported to minecraft 1.21.10 and used overlays
 - Bugfix: `/trigger hat` command not working.
